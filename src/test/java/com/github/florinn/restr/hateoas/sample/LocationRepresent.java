@@ -17,11 +17,11 @@ public class LocationRepresent extends Link<Location> {
 		
 		Map<String, Object> links = new LinkedHashMap<String,Object>();
 		
-		URI calendarUri = UriBuilder.fromPath(
+		URI userCalendarsUri = UriBuilder.fromPath(
 				RestResourceDefinitionRegistry.getResourceDefinition(Calendar.class).getPathTemplate())
 				.build(location.getUser().getId());
-		Link<?> calendarLink = Link.from(fqBasePath, calendarUri.getPath());
-		links.put("calendar", calendarLink);
+		Link<?> calendarLink = Link.from(fqBasePath, userCalendarsUri.getPath());
+		links.put("calendars", calendarLink);
 		
 		this.put("meta", links);
 	}

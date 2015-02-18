@@ -8,6 +8,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.junit.Test;
 
+import com.github.florinn.restr.core.Entity;
 import com.github.florinn.restr.core.EntityRef;
 import com.github.florinn.restr.hateoas.sample.Calendar;
 import com.github.florinn.restr.hateoas.sample.CalendarRepresent;
@@ -30,7 +31,7 @@ public class LinkFactoryTest {
 				new RestResourceDefinition<User, UserRepresent>(User.class, UserRepresent.class, usersPath) {
 
 			@Override
-			public URI getPath(User user) {
+			public URI getPath(Entity<?> user) {
 				URI path = UriBuilder.fromPath(getPathTemplate()).build();
 				return path;
 			}
@@ -56,7 +57,7 @@ public class LinkFactoryTest {
 				new RestResourceDefinition<User, UserRepresent>(User.class, UserRepresent.class, usersPath) {
 
 			@Override
-			public URI getPath(User user) {
+			public URI getPath(Entity<?> user) {
 				URI path = UriBuilder.fromPath(getPathTemplate()).build();
 				return path;
 			}
@@ -68,7 +69,8 @@ public class LinkFactoryTest {
 				new RestResourceDefinition<Calendar, CalendarRepresent>(Calendar.class, CalendarRepresent.class, calendarsPath) {
 			
 			@Override
-			public URI getPath(Calendar calendar) {
+			public URI getPath(Entity<?> entity) {
+				Calendar calendar = (Calendar) entity;
 				URI path = UriBuilder.fromPath(getPathTemplate()).build(calendar.getUser().getId());
 				return path;
 			}
@@ -80,7 +82,8 @@ public class LinkFactoryTest {
 				new RestResourceDefinition<Location, LocationRepresent>(Location.class, LocationRepresent.class, locationsPath) {
 
 			@Override
-			public URI getPath(Location location) {
+			public URI getPath(Entity<?> entity) {
+				Location location = (Location) entity;
 				URI path = UriBuilder.fromPath(getPathTemplate()).build(location.getUser().getId());
 				return path;
 			}
@@ -109,7 +112,7 @@ public class LinkFactoryTest {
 				new RestResourceDefinition<User, UserRepresent>(User.class, UserRepresent.class, usersPath) {
 
 			@Override
-			public URI getPath(User user) {
+			public URI getPath(Entity<?> user) {
 				URI path = UriBuilder.fromPath(getPathTemplate()).build();
 				return path;
 			}

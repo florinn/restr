@@ -97,7 +97,7 @@ public class Link<T extends Entity<?>> extends LinkedHashMap<String, Object> {
 		return result;
 	}
 
-	private void putEntityProps(String fqBasePath, Entity<?> entity) {
+	private void putEntityProps(String fqBasePath, T entity) {
 		@SuppressWarnings("unchecked")
 		Map<String, Object> propsMap = Collections.checkedMap(
 				mapper.convertValue(entity, Map.class), String.class, Object.class);
@@ -120,7 +120,8 @@ public class Link<T extends Entity<?>> extends LinkedHashMap<String, Object> {
 								@SuppressWarnings("unchecked")
 								EntityRef<? extends Entity<?>, ?> entityDBRef = (EntityRef<? extends Entity<?>, ?>) propValue;
 
-								URI baseUri = RestResourceDefinitionRegistry.getPath(entity);
+								RestResourceDefinition<?, ?> rd = (RestResourceDefinition<?, ?>) RestResourceDefinitionRegistry.getResourceDefinition(entityDBRef.toClazz());
+								URI baseUri = rd.getPath(entity);
 								StringBuilder sb = new StringBuilder(baseUri.getPath());
 								sb.append(PATH_SEPARATOR).append(entityDBRef.getId());
 

@@ -8,6 +8,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.junit.Test;
 
+import com.github.florinn.restr.core.Entity;
 import com.github.florinn.restr.hateoas.sample.User;
 import com.github.florinn.restr.hateoas.sample.UserRepresent;
 
@@ -23,7 +24,7 @@ public class LinkTest {
 				new RestResourceDefinition<User, UserRepresent>(User.class, UserRepresent.class, usersPath) {
 
 			@Override
-			public URI getPath(User user) {
+			public URI getPath(Entity<?> entity) {
 				URI path = UriBuilder.fromPath(getPathTemplate()).build();
 				return path;
 			}
@@ -49,7 +50,7 @@ public class LinkTest {
 				new RestResourceDefinition<User, UserRepresent>(User.class, UserRepresent.class, usersPath) {
 			
 			@Override
-			public URI getPath(User user) {
+			public URI getPath(Entity<?> entity) {
 				URI path = UriBuilder.fromPath(getPathTemplate()).build();
 				return path;
 			}

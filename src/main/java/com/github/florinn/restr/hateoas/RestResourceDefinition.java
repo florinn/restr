@@ -18,7 +18,7 @@ public abstract class RestResourceDefinition<T extends Entity<?>, U extends Link
 		this.pathTemplate = pathTemplate;
 	}
 
-	public abstract URI getPath(T entity);
+	public abstract URI getPath(Entity<?> entity);
 	
 	public Class<T> getResourceClass() {
 		return resourceClass;
