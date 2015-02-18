@@ -9,64 +9,79 @@ import javax.ws.rs.core.UriBuilder;
 import org.junit.Test;
 
 import com.github.florinn.restr.core.EntityRef;
+import com.github.florinn.restr.hateoas.sample.Calendar;
+import com.github.florinn.restr.hateoas.sample.CalendarRepresent;
 import com.github.florinn.restr.hateoas.sample.Location;
-import com.github.florinn.restr.hateoas.sample.LocationRepresentation;
-import com.github.florinn.restr.hateoas.sample.Organization;
-import com.github.florinn.restr.hateoas.sample.OrganizationRepresentation;
+import com.github.florinn.restr.hateoas.sample.LocationRepresent;
+import com.github.florinn.restr.hateoas.sample.User;
+import com.github.florinn.restr.hateoas.sample.UserRepresent;
 
 public class LinkFactoryTest {
 
 	String fqBasePath = "http://localhost";
-	String orgPath = "/orgs";
-	String locationPath = "/orgs/{org_id}/locations";
+	String usersPath = "/users";
+	String locationsPath = usersPath + "/{user_id}/locations";
+	String calendarsPath = usersPath + "/{user_id}/calendars";
 	
 	@Test
 	public void simpleResourceRepresentation() throws Exception {
 
-		RestResourceDefinition<Organization, OrganizationRepresentation> organizationResourceDefinition = 
-				new RestResourceDefinition<Organization, OrganizationRepresentation>(Organization.class, OrganizationRepresentation.class, orgPath) {
+		RestResourceDefinition<User, UserRepresent> userResourceDefinition = 
+				new RestResourceDefinition<User, UserRepresent>(User.class, UserRepresent.class, usersPath) {
 
 			@Override
-			public URI getPath(Organization org) {
+			public URI getPath(User user) {
 				URI path = UriBuilder.fromPath(getPathTemplate()).build();
 				return path;
 			}
 
 		};
-		RestResourceDefinitionRegistry.registerResourceDefinition(organizationResourceDefinition);
+		RestResourceDefinitionRegistry.registerResourceDefinition(userResourceDefinition);
 
 
-		Organization organization = new Organization("abc", "A B C");
+		User user = new User("abc", "A B C");
 
-		Link<Organization> organizationLink = LinkFactory.getLink(fqBasePath, organization);
+		Link<User> userLink = LinkFactory.getLink(fqBasePath, user);
 
 
-		Link<Organization> organizationRepresentation = new OrganizationRepresentation(fqBasePath, organization);
-		assertThat(organizationLink).isEqualTo(organizationRepresentation);
-		assertThat(organizationLink.asJSON()).isEqualTo(organizationRepresentation.asJSON());
+		Link<User> userRepresentation = new UserRepresent(fqBasePath, user);
+		assertThat(userLink).isEqualTo(userRepresentation);
+		assertThat(userLink.asJSON()).isEqualTo(userRepresentation.asJSON());
 	}
 
 	@Test
 	public void hierarchicalResourceRepresentation() throws Exception {
 
-		RestResourceDefinition<Organization, OrganizationRepresentation> organizationResourceDefinition = 
-				new RestResourceDefinition<Organization, OrganizationRepresentation>(Organization.class, OrganizationRepresentation.class, orgPath) {
+		RestResourceDefinition<User, UserRepresent> userResourceDefinition = 
+				new RestResourceDefinition<User, UserRepresent>(User.class, UserRepresent.class, usersPath) {
 
 			@Override
-			public URI getPath(Organization org) {
+			public URI getPath(User user) {
 				URI path = UriBuilder.fromPath(getPathTemplate()).build();
 				return path;
 			}
 
 		};
-		RestResourceDefinitionRegistry.registerResourceDefinition(organizationResourceDefinition);
+		RestResourceDefinitionRegistry.registerResourceDefinition(userResourceDefinition);
 
-		RestResourceDefinition<Location, LocationRepresentation> locationResourceDefinition = 
-				new RestResourceDefinition<Location, LocationRepresentation>(Location.class, LocationRepresentation.class, locationPath) {
+		RestResourceDefinition<Calendar, CalendarRepresent> calendarResourceDefinition = 
+				new RestResourceDefinition<Calendar, CalendarRepresent>(Calendar.class, CalendarRepresent.class, calendarsPath) {
+			
+			@Override
+			public URI getPath(Calendar calendar) {
+				URI path = UriBuilder.fromPath(getPathTemplate()).build(calendar.getUser().getId());
+				return path;
+			}
+			
+		};
+		RestResourceDefinitionRegistry.registerResourceDefinition(calendarResourceDefinition);
+		
+		RestResourceDefinition<Location, LocationRepresent> locationResourceDefinition = 
+				new RestResourceDefinition<Location, LocationRepresent>(Location.class, LocationRepresent.class, locationsPath) {
 
 			@Override
 			public URI getPath(Location location) {
-				URI path = UriBuilder.fromPath(getPathTemplate()).build(location.getOrg().getId());
+				URI path = UriBuilder.fromPath(getPathTemplate()).build(location.getUser().getId());
 				return path;
 			}
 
@@ -74,15 +89,15 @@ public class LinkFactoryTest {
 		RestResourceDefinitionRegistry.registerResourceDefinition(locationResourceDefinition);
 
 
-		Organization organization = new Organization("abc", "A B C");
-		EntityRef<String, Organization> orgRef = EntityRef.from(organization);
+		User user = new User("abc", "A B C");
+		EntityRef<String, User> userRef = EntityRef.from(user);
 		Location.GeoCoordinate geoCoordinate = new Location.GeoCoordinate(123456, 654321);
-		Location location = new Location("xyz", orgRef, geoCoordinate);
+		Location location = new Location("xyz", userRef, geoCoordinate);
 
 		Link<Location> locationLink = LinkFactory.getLink(fqBasePath, location);
 
 
-		Link<Location> locationRepresentation = new LocationRepresentation(fqBasePath, location);
+		Link<Location> locationRepresentation = new LocationRepresent(fqBasePath, location);
 		assertThat(locationLink).isEqualTo(locationRepresentation);
 		assertThat(locationLink.asJSON()).isEqualTo(locationRepresentation.asJSON());
 	}
@@ -90,27 +105,27 @@ public class LinkFactoryTest {
 	@Test
 	public void resourceRepresentationWithEmbeddedJSON() throws Exception {
 
-		RestResourceDefinition<Organization, OrganizationRepresentation> organizationResourceDefinition = 
-				new RestResourceDefinition<Organization, OrganizationRepresentation>(Organization.class, OrganizationRepresentation.class, orgPath) {
+		RestResourceDefinition<User, UserRepresent> userResourceDefinition = 
+				new RestResourceDefinition<User, UserRepresent>(User.class, UserRepresent.class, usersPath) {
 
 			@Override
-			public URI getPath(Organization org) {
+			public URI getPath(User user) {
 				URI path = UriBuilder.fromPath(getPathTemplate()).build();
 				return path;
 			}
 
 		};
-		RestResourceDefinitionRegistry.registerResourceDefinition(organizationResourceDefinition);
+		RestResourceDefinitionRegistry.registerResourceDefinition(userResourceDefinition);
 
 
-		Organization organization = new Organization("abc", "{ \"title\": \"A B C\", \"symbol\": \"a-b-c\" }");
+		User user = new User("jdoe", "{ \"title\": \"Mr\", \"name\": \"John Doe\" }");
 
-		Link<Organization> organizationLink = LinkFactory.getLink(fqBasePath, organization);
+		Link<User> userLink = LinkFactory.getLink(fqBasePath, user);
 
 
-		Link<Organization> organizationRepresentation = new OrganizationRepresentation(fqBasePath, organization);
-		assertThat(organizationLink).isEqualTo(organizationRepresentation);
-		assertThat(organizationLink.asJSON()).isEqualTo(organizationRepresentation.asJSON());
+		Link<User> userRepresentation = new UserRepresent(fqBasePath, user);
+		assertThat(userLink).isEqualTo(userRepresentation);
+		assertThat(userLink.asJSON()).isEqualTo(userRepresentation.asJSON());
 	}
 
 }

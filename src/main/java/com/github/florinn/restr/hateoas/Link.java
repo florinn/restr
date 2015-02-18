@@ -38,13 +38,20 @@ public class Link<T extends Entity<?>> extends LinkedHashMap<String, Object> {
 	private Link(String href) {
 		putHref(href);
 	}
-	public Link(String fqBasePath, T entity) {
+	protected Link(String fqBasePath, T entity) {
 		fqBasePath = sanitizeFullyQualifiedContextPath(fqBasePath);
 		String href = createHref(fqBasePath, entity);
 		putHref(href);
 		this.putEntityProps(fqBasePath, entity);
 	}
 
+	public static <T extends Entity<?>> Link<T> from(String fqBasePath, T entity) {
+		fqBasePath = sanitizeFullyQualifiedContextPath(fqBasePath);
+		String href = createHref(fqBasePath, entity);
+		Link<T> link = new Link<T>(href);
+		return link;
+	}
+	
 	public static Link<?> from(String fqBasePath, String subPath) {
 		fqBasePath = sanitizeFullyQualifiedContextPath(fqBasePath);
 		if (!subPath.startsWith(PATH_SEPARATOR)) {
@@ -62,7 +69,7 @@ public class Link<T extends Entity<?>> extends LinkedHashMap<String, Object> {
 		return fqBasePath;
 	}
 
-	protected String createHref(String fqBasePath, Entity<?> entity) {
+	protected static String createHref(String fqBasePath, Entity<?> entity) {
 		String result = null;
 		URI resourcePath = RestResourceDefinitionRegistry.getPath(entity);
 		if(resourcePath != null) {

@@ -2,13 +2,13 @@ package com.github.florinn.restr.hateoas.sample;
 
 import com.github.florinn.restr.core.Entity;
 
-public class Organization extends Entity<String> {
+public class User extends Entity<String> {
 
 	private String name;
 	
-	public Organization(String orgId, String orgName) {
-		this.id = orgId;
-		this.name = orgName;
+	public User(String userId, String userName) {
+		this.id = userId;
+		this.name = userName;
 	}
 
 	public String getName() {

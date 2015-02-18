@@ -29,23 +29,23 @@ public class Location extends Entity<String> {
 		}
 	}
 
-	private EntityRef<String, Organization> org;
+	private EntityRef<String, User> user;
 	private GeoCoordinate geoCoordinate;
 	
 	public Location(
 			String id,
-			EntityRef<String, Organization> org,
+			EntityRef<String, User> user,
 			GeoCoordinate geoCoordinate) {
 		this.id = id;
-		this.org = org;
+		this.user = user;
 		this.geoCoordinate = geoCoordinate;
 	}
 	
-	public EntityRef<String, Organization> getOrg() {
-		return org;
+	public EntityRef<String, User> getUser() {
+		return user;
 	}
-	public void setOrg(EntityRef<String, Organization> org) {
-		this.org = org;
+	public void setUser(EntityRef<String, User> user) {
+		this.user = user;
 	}
 	public GeoCoordinate getGeoCoordinate() {
 		return geoCoordinate;

@@ -10,18 +10,18 @@ import com.github.florinn.restr.hateoas.Link;
 import com.github.florinn.restr.hateoas.RestResourceDefinitionRegistry;
 
 @SuppressWarnings("serial")
-public class LocationRepresentation extends Link<Location> {
+public class LocationRepresent extends Link<Location> {
 
-	public LocationRepresentation(String fqBasePath, Location location) {
+	public LocationRepresent(String fqBasePath, Location location) {
 		super(fqBasePath, location);
 		
 		Map<String, Object> links = new LinkedHashMap<String,Object>();
 		
-		URI dataUri = UriBuilder.fromPath(
-				RestResourceDefinitionRegistry.getResourceDefinition(Organization.class).getPathTemplate())
-				.build(location.getOrg().getId());
-		Link<?> commands = Link.from(fqBasePath, dataUri.getPath());
-		links.put("data", commands);
+		URI calendarUri = UriBuilder.fromPath(
+				RestResourceDefinitionRegistry.getResourceDefinition(Calendar.class).getPathTemplate())
+				.build(location.getUser().getId());
+		Link<?> calendarLink = Link.from(fqBasePath, calendarUri.getPath());
+		links.put("calendar", calendarLink);
 		
 		this.put("meta", links);
 	}
