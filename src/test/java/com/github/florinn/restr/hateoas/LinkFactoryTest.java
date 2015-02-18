@@ -40,7 +40,7 @@ public class LinkFactoryTest {
 		RestResourceDefinitionRegistry.registerResourceDefinition(userResourceDefinition);
 
 
-		User user = new User("abc", "A B C");
+		User user = new User("jdoe", "John Doe");
 
 		Link<User> userLink = LinkFactory.getLink(fqBasePath, user);
 
@@ -92,7 +92,7 @@ public class LinkFactoryTest {
 		RestResourceDefinitionRegistry.registerResourceDefinition(locationResourceDefinition);
 
 
-		User user = new User("abc", "A B C");
+		User user = new User("jdoe", "John Doe");
 		EntityRef<String, User> userRef = EntityRef.from(user);
 		Location.GeoCoordinate geoCoordinate = new Location.GeoCoordinate(123456, 654321);
 		Location location = new Location("xyz", userRef, geoCoordinate);
