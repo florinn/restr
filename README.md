@@ -107,9 +107,9 @@ public class UserRepresentation extends Link<User> {
 The representation class is a map of **(entity property name, entity property value)**, so you may customize it rather easily. E.g. 
 
 ```java
-public class LocationRepresent extends Link<Location> {
+public class LocationRepresentation extends Link<Location> {
 
-    public LocationRepresent(String fqBasePath, Location location) {
+    public LocationRepresentation(String fqBasePath, Location location) {
         super(fqBasePath, location);
         
         Map<String, Object> links = new LinkedHashMap<String,Object>();
@@ -168,7 +168,7 @@ Link<Location> locationLink = LinkFactory.getLink(fqBasePath, location);
 To get the JSON corresponding to a representation instance:
 
 ```java
-userLink.asJSON();
+locationLink.asJSON();
 ```
 
 ```json
