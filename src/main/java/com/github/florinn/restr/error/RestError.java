@@ -1,5 +1,8 @@
 package com.github.florinn.restr.error;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.springframework.util.ObjectUtils;
 import org.springframework.http.HttpStatus;
 
@@ -9,6 +12,11 @@ import org.springframework.http.HttpStatus;
  */
 public class RestError {
 
+	private static final String STATUS_PROP_NAME = "status";
+    private static final String CODE_PROP_NAME = "code";
+    private static final String MESSAGE_PROP_NAME = "message";
+    private static final String DEVELOPER_MESSAGE_PROP_NAME = "developerMessage";
+	
 	private final HttpStatus status;
 	private final int code;
 	private final String message;
@@ -67,6 +75,10 @@ public class RestError {
 		return buf;
 	}
 
+	private String toString(HttpStatus status) {
+        return append(new StringBuilder(), status).toString();
+    }
+	
 	public HttpStatus getStatus() {
 		return status;
 	}
@@ -82,6 +94,43 @@ public class RestError {
 	public Throwable getThrowable() {
 		return throwable;
 	}
+	
+	public Map<String,?> toMap() {
+        Map<String,Object> m = new LinkedHashMap<String,Object>();
+        HttpStatus status = getStatus();
+        m.put(STATUS_PROP_NAME, status.value());
+
+        int code = getCode();
+        if (code <= 0) {
+            code = status.value();
+        }
+        m.put(CODE_PROP_NAME, code);
+
+        String httpStatusMessage = null;
+
+        String message = getMessage();
+        if (message == null) {
+            httpStatusMessage = toString(status);
+            message = httpStatusMessage;
+        }
+        m.put(MESSAGE_PROP_NAME, message);
+
+        String devMsg = getDeveloperMessage();
+        if (devMsg == null) {
+            if (httpStatusMessage == null) {
+                httpStatusMessage = toString(status);
+            }
+            devMsg = httpStatusMessage;
+
+            Throwable t = getThrowable();
+            if (t != null) {
+                devMsg = devMsg + ": " + t.getMessage();
+            }
+        }
+        m.put(DEVELOPER_MESSAGE_PROP_NAME, devMsg);
+
+        return m;
+    }
 
 	public static class Builder {
 
