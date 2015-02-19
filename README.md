@@ -63,16 +63,16 @@ java.lang.OutOfMemoryError =             412 | 01 | null
 Throwable =                              500 | Server unexpected error, retry request. | <exmsg>
 ```
 
-** Note: **
+> **Tip:**
 
-- mapping order is top to bottom
-- nested exceptions are matched by first found parent exception
-- comment lines start with `#`
-- values should be delimited by `|` and specified using either as **key=value** (possible keys: `code`, `msg`, `devMsg`) or only as **value** omitting the key
-- `<exmsg>` inserts the exception message 
-- `code` can be overriden when calling `RestExceptionMapper.getRestError`
-- `null` means a null value
-- `\` allows continuation on the next line
+> - mapping order is top to bottom
+> - nested exceptions are matched by first found parent exception
+> - comment lines start with `#`
+> - values should be delimited by `|` and specified using either as **key=value** (possible keys: `code`, `msg`, `devMsg`) or only as **value** omitting the key
+> - `<exmsg>` inserts the exception message 
+> - `code` can be overriden when calling `RestExceptionMapper.getRestError`
+> - `null` means a null value
+> - `\` allows continuation on the next line
 
 To get the matching REST error:
 
@@ -80,10 +80,10 @@ To get the matching REST error:
 RestError error = RestExceptionMapper.getRestError(exception);
 ```
 
-** Note: **
+> **Note:**
 
-- `RestExceptionMapperProvider` is a JAX-RS exception mapper available to use in your project. This exception mapper considers the innermost exception when trying to match a REST error.
-- to be able to pass a `code` value to the `RestExceptionMapperProvider`, you may subclass any custom exception from the provided `BaseException` or `BaseRuntimeException`
+> - `RestExceptionMapperProvider` is a JAX-RS exception mapper available to use in your project. This exception mapper considers the innermost exception when trying to match a REST error.
+> - to be able to pass a `code` value to the `RestExceptionMapperProvider`, you may subclass any custom exception from the provided `BaseException` or `BaseRuntimeException`
 
 
 ### Build REST representations
@@ -102,7 +102,7 @@ public class UserRepresentation extends Link<User> {
 }
 ```
 
-** Note: ** `fqBasePath` is the fully qualified base path
+> **Note:** `fqBasePath` is the fully qualified base path
 
 The representation class is a map of **(entity property name, entity property value)**, so you may customize it rather easily. E.g. 
 
@@ -144,7 +144,7 @@ RestResourceDefinition<User, UserRepresentation> userResourceDefinition =
         };
 ```
 
-** Note: ** `getPath` is used to construct the `href` field pointing to the `uri` for the resource. You may use the path template (and corresponding values for any placeholders) as shown above.
+> **Tip:** `getPath` is used to construct the `href` field pointing to the `uri` for the resource. You may use the path template (and corresponding values for any placeholders) as shown above.
 
 **The association above needs to be registered with `RestResourceDefinitionRegistry`:**
 
@@ -190,11 +190,11 @@ userLink.asJSON();
 }
 ```
 
-** Note: **
+> **Note:**
 
-- `EntityRef` may be used as a reference to an entity instance, it contains the class name and the id of the resource instance
-- `EntityRef` types nested in `Entity` types get represented as `href` links
-- Nested `Entity` types get represented using their default representation class
+> - `EntityRef` may be used as a reference to an entity instance, it contains the class name and the id of the resource instance
+> - `EntityRef` types nested in `Entity` types get represented as `href` links
+> - Nested `Entity` types get represented using their default representation class
 
 To get an `href` link (which could be used to implement representation expansion for resource listing):
 
@@ -208,4 +208,4 @@ Link<User> userLink = Link.from(fqBasePath, user);
 }
 ```
 
-** Note: ** Any valid JSON within entities gets represented as it is
+> **Tip:** Any valid JSON within entities gets represented as it is
