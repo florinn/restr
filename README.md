@@ -31,7 +31,7 @@ Add this Maven dependency to your build:
     <dependency>
         <groupId>com.github.florinn</groupId>
         <artifactId>restr</artifactId>
-        <version>${restr.version}</version>
+        <version>0.0.1</version>
     </dependency>
 </dependencies>
 ```
